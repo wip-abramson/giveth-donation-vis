@@ -66,21 +66,24 @@ const gravatarsStyles = theme =>
     },
   })
 
-const Gravatars = ({ classes, gravatars }) => (
-  <Grid container direction="column" spacing={16}>
-    <Grid item>
-      <Typography variant="title" className={classes.title}>
-        {gravatars.length} Gravatars
-      </Typography>
-    </Grid>
-    <Grid item>
-      <Grid container direction="row" spacing={16}>
-        {gravatars.map(gravatar => (
-          <StyledGravatar key={gravatar.id} {...gravatar} />
-        ))}
-      </Grid>
-    </Grid>
-  </Grid>
-)
+const Gravatars = ({ classes, gravatars }) => {
+    console.log(gravatars)
+    return (
+        <Grid container direction="column" spacing={16}>
+            {/*<Grid item>*/}
+                {/*<Typography variant="title" className={classes.title}>*/}
+                    {/*{gravatars.length} Gravatars*/}
+                {/*</Typography>*/}
+            {/*</Grid>*/}
+            {/*<Grid item>*/}
+                {/*<Grid container direction="row" spacing={16}>*/}
+                    {/*{gravatars.map(gravatar => (*/}
+                        {/*<StyledGravatar key={gravatar.id} {...gravatar} />*/}
+                    {/*))}*/}
+                {/*</Grid>*/}
+            {/*</Grid>*/}
+        </Grid>
+    )
+}
 
 export default withStyles(gravatarsStyles)(Gravatars)

@@ -16,6 +16,7 @@ import Header from './components/Header'
 import Error from './components/Error'
 import Gravatars from './components/Gravatars'
 import Filter from './components/Filter'
+import GivethDonators from "./components/Visualisation/GivethDonators";
 
 if (!process.env.REACT_APP_GRAPHQL_ENDPOINT) {
   throw new Error('REACT_APP_GRAPHQL_ENDPOINT environment variable not defined')
@@ -27,13 +28,14 @@ const client = new ApolloClient({
 })
 
 const GRAVATARS_QUERY = gql`
-  query gravatars($where: Gravatar_filter!, $orderBy: Gravatar_orderBy!) {
-    gravatars(first: 100, where: $where, orderBy: $orderBy, orderDirection: asc) {
-      id
-      owner
-      displayName
-      imageUrl
-    }
+  query givethdonations{
+      donates(first: 10) {
+        id
+        giverId
+        receiverId
+        token
+        amount
+      }
   }
 `
 
@@ -80,23 +82,25 @@ class App extends Component {
               <Grid container>
                 <Query
                   query={GRAVATARS_QUERY}
-                  variables={{
-                    where: {
-                      ...(withImage ? { imageUrl_starts_with: 'http' } : {}),
-                      ...(withName ? { displayName_not: '' } : {}),
-                    },
-                    orderBy: orderBy,
-                  }}
+                  // variables={{
+                  //   where: {
+                  //     ...(withImage ? { imageUrl_starts_with: 'http' } : {}),
+                  //     ...(withName ? { displayName_not: '' } : {}),
+                  //   },
+                  //   orderBy: orderBy,
+                  // }}
                 >
                   {({ data, error, loading }) => {
                     return loading ? (
                       <LinearProgress variant="query" style={{ width: '100%' }} />
                     ) : error ? (
                       <Error error={error} />
-                    ) : (
-                      <Gravatars gravatars={data.gravatars} />
-                    )
-                  }}
+                    ) :
+                      (
+                          <GivethDonators donationData={data.donates}/>
+                      )
+                  }
+                  }
                 </Query>
               </Grid>
             </Grid>
