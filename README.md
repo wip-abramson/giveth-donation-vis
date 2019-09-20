@@ -16,3 +16,19 @@ All you need to do is connect it with the donation subgraph
    yarn install
    yarn start
    ```
+   
+## TODO 
+
+* Add directional arrows
+* Add Zoom to Visualiation
+* Make visualisation draggable
+* Represent nodes based on amount given?
+    * Color code perhaps?
+* Clickable links for exact amount donated
+* Clickable nodes for exact amount received & donated
+* Fix forces
+    * No overlapling nodes or links
+    * Bounded box?
+    * Could use length to represent amount donated. Not sure about this.
+   
+
