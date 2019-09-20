@@ -41,6 +41,7 @@ const GivethDonators = ({donationData}) => {
     const drawChart = (nodes, links, donationTotal) => {
         const height = 1000;
         const width = 1000;
+        const nodeRadius = 20;
 
         console.log(nodes);
         console.log(links)
@@ -71,12 +72,19 @@ const GivethDonators = ({donationData}) => {
         //We need the id accessor to use named sources and targets
         let linkForce =  d3.forceLink(links)
             .id(function(d) { return d.id; })
-            .distance(60);
+            .distance(60)
+            .strength(0.7);
+
+        let chargeForce = d3.forceManyBody().strength(-100).distanceMax(400)
+
+        let collisionForce = d3.forceCollide(nodeRadius + 10)
 
         simulation
             .force("charge_force", d3.forceManyBody())
             .force("center_force", d3.forceCenter(width / 2, height / 2))
-            .force("links",linkForce);
+            .force("links",linkForce)
+            .force("collision", collisionForce)
+            .force("charge", chargeForce);
 
         let node = containingG.append("g")
             .attr("class", "nodes")
@@ -84,7 +92,7 @@ const GivethDonators = ({donationData}) => {
             .data(nodes)
             .enter()
             .append("circle")
-            .attr("r", 10)
+            .attr("r", nodeRadius)
             .attr("fill", "red");
 
 
