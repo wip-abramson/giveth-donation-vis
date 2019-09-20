@@ -86,29 +86,7 @@ const GivethDonators = ({donationData}) => {
             .force("collision", collisionForce)
             .force("charge", chargeForce);
 
-        let node = containingG.append("g")
-            .attr("class", "nodes")
-            .selectAll("circle")
-            .data(nodes)
-            .enter()
-            .append("circle")
-            .attr("r", nodeRadius)
-            .attr("fill", "red");
 
-
-        let nodeText = containingG.append("g")
-            .selectAll("text")
-            .data(nodes)
-            .enter()
-            .append("text");
-
-        let nodeTextLabels = nodeText
-            .attr("x", function(d) { return (d.x)})
-            .attr("y", function(d) { return (d.y) })
-            .text(function(d) {return d.id})
-            .attr("font-family", "sans-serif")
-            .attr("font-size", "10px")
-            .attr("fill", "black");
 
         //draw lines for the links
         let link = containingG.append("g")
@@ -139,7 +117,29 @@ const GivethDonators = ({donationData}) => {
             .attr("font-size", "10px");
             // .attr("fill", "black");
 
+        let node = containingG.append("g")
+            .attr("class", "nodes")
+            .selectAll("circle")
+            .data(nodes)
+            .enter()
+            .append("circle")
+            .attr("r", nodeRadius)
+            .attr("fill", "red");
 
+
+        let nodeText = containingG.append("g")
+            .selectAll("text")
+            .data(nodes)
+            .enter()
+            .append("text");
+
+        let nodeTextLabels = nodeText
+            .attr("x", function(d) { return (d.x)})
+            .attr("y", function(d) { return (d.y) })
+            .text(function(d) {return d.id})
+            .attr("font-family", "sans-serif")
+            .attr("font-size", "10px")
+            .attr("fill", "black");
 
         function tickActions() {
             //update circle positions each tick of the simulation
