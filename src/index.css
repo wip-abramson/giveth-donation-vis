@@ -22,3 +22,10 @@ code {
   stroke: #fff;
   stroke-width: 1.5px;
 }
+
+.nodes text {
+    stroke: black;
+    color: black;
+    font-size: 20px;
+
+}

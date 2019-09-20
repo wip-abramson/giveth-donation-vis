@@ -19,9 +19,12 @@ const GivethDonators = ({donationData}) => {
         donationData.map(donation => {
             if (!includedGiverIds.includes(donation.giverId)) {
                 nodes.push({"id": donation.giverId})
+                includedGiverIds.push(donation.giverId)
             }
             if (!includedGiverIds.includes(donation.receiverId)) {
                 nodes.push({"id": donation.receiverId})
+                includedGiverIds.push(donation.receiverId)
+
             }
             links.push({"source": donation.giverId, "target": donation.receiverId, "amount": donation.amount})
         })
@@ -50,7 +53,8 @@ const GivethDonators = ({donationData}) => {
         //Create the link force
         //We need the id accessor to use named sources and targets
         let linkForce =  d3.forceLink(links)
-            .id(function(d) { return d.id; });
+            .id(function(d) { return d.id; })
+            .distance(60);
 
         simulation
             .force("charge_force", d3.forceManyBody())
@@ -63,8 +67,22 @@ const GivethDonators = ({donationData}) => {
             .data(nodes)
             .enter()
             .append("circle")
-            .attr("r", 5)
+            .attr("r", 10)
             .attr("fill", "red");
+
+        let nodeText = svg.append("g")
+            .selectAll("text")
+            .data(nodes)
+            .enter()
+            .append("text");
+
+        let nodeTextLabels = nodeText
+            .attr("x", function(d) { return (d.x)})
+            .attr("y", function(d) { return (d.y) })
+            .text(function(d) {return d.id})
+            .attr("font-family", "sans-serif")
+            .attr("font-size", "10px")
+            .attr("fill", "black");
 
         //draw lines for the links
         let link = svg.append("g")
@@ -75,13 +93,22 @@ const GivethDonators = ({donationData}) => {
             .attr("stroke-width", 2)
             .attr("fill", "blue");
 
-        let linkLabels = link.append('text')
-            .attr("x", function(d) { return (d.x1 + d.x2) / 2; })
-            .attr("y", function(d) { return (d.y1 + d.y2) / 2; })
+        let linkText = svg.append("g")
+            .selectAll("text")
+            .data(links)
+            .enter()
+            .append("text");
+
+
+        let linkTextLabels = linkText
+            .attr("x", function(d) { return (d.source.x + d.target.x) / 2; })
+            .attr("y", function(d) { return (d.source.y + d.target.y) / 2 })
             .text(function(d) {return d.amount})
             .attr("font-family", "sans-serif")
-            .attr("font-size", "20px")
-            .attr("fill", "red");
+            .attr("font-size", "10px");
+            // .attr("fill", "black");
+
+
 
         function tickActions() {
             //update circle positions each tick of the simulation
@@ -97,7 +124,16 @@ const GivethDonators = ({donationData}) => {
                 .attr("y1", function(d) { return d.source.y; })
                 .attr("x2", function(d) { return d.target.x; })
                 .attr("y2", function(d) { return d.target.y; });
+
+            nodeTextLabels
+                .attr("x", function(d) { return (d.x)})
+                .attr("y", function(d) { return (d.y) })
+
+            linkTextLabels
+                .attr("x", function(d) { return (d.source.x + d.target.x) / 2; })
+                .attr("y", function(d) { return (d.source.y + d.target.y) / 2 })
         }
+
 
 
 
