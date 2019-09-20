@@ -5,6 +5,7 @@ const GivethDonators = ({donationData}) => {
 
     // const [giverNodes, setGiverNodes] = React.useState([]);
     // const [donationLinks, setDonationLinks] = React.useState([]);
+    // const [donationTotal, setDonationTotal] = React.useState(0);
 
     React.useEffect(() => {
         console.log("Mounted");
@@ -16,6 +17,7 @@ const GivethDonators = ({donationData}) => {
         let includedGiverIds = [];
         let nodes = [];
         let links = [];
+        let runningTotal = 0
         donationData.map(donation => {
             if (!includedGiverIds.includes(donation.giverId)) {
                 nodes.push({"id": donation.giverId})
@@ -27,20 +29,23 @@ const GivethDonators = ({donationData}) => {
 
             }
             links.push({"source": donation.giverId, "target": donation.receiverId, "amount": donation.amount})
+            runningTotal += donation.amount / 10**18;
         })
         // console.log(nodes);
         // console.log(links);
         // setGiverNodes(nodes);
         // console.log(giverNodes)
         // setDonationLinks(links);
-        drawChart(nodes, links)
+
+        drawChart(nodes, links, runningTotal)
+        console.log(runningTotal)
     }
 
 
 
-    const drawChart = (nodes, links) => {
-        const height = 700;
-        const width = 700;
+    const drawChart = (nodes, links, donationTotal) => {
+        const height = 1000;
+        const width = 1000;
 
         console.log(nodes);
         console.log(links)
@@ -90,7 +95,12 @@ const GivethDonators = ({donationData}) => {
             .selectAll("line")
             .data(links)
             .enter().append("line")
-            .attr("stroke-width", 2)
+            .attr("stroke-width", function(d) {
+                const strokeWidth =  d.amount / 10**18 /donationTotal * 100
+                console.log(strokeWidth);
+
+                return strokeWidth > 2 ? strokeWidth : 2
+            })
             .attr("fill", "blue");
 
         let linkText = svg.append("g")
@@ -103,7 +113,7 @@ const GivethDonators = ({donationData}) => {
         let linkTextLabels = linkText
             .attr("x", function(d) { return (d.source.x + d.target.x) / 2; })
             .attr("y", function(d) { return (d.source.y + d.target.y) / 2 })
-            .text(function(d) {return d.amount})
+            .text(function(d) {return ""})
             .attr("font-family", "sans-serif")
             .attr("font-size", "10px");
             // .attr("fill", "black");

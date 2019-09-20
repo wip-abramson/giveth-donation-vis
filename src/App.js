@@ -29,7 +29,7 @@ const client = new ApolloClient({
 
 const GRAVATARS_QUERY = gql`
   query givethdonations{
-      donates(first: 10) {
+      donates {
         id
         giverId
         receiverId
