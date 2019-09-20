@@ -31,11 +31,6 @@ const GivethDonators = ({donationData}) => {
             links.push({"source": donation.giverId, "target": donation.receiverId, "amount": donation.amount})
             runningTotal += donation.amount / 10**18;
         })
-        // console.log(nodes);
-        // console.log(links);
-        // setGiverNodes(nodes);
-        // console.log(giverNodes)
-        // setDonationLinks(links);
 
         drawChart(nodes, links, runningTotal)
         console.log(runningTotal)
@@ -52,6 +47,23 @@ const GivethDonators = ({donationData}) => {
 
         const svg = d3.select("#d3-container").append("svg").attr("width", width).attr("height", height);
 
+        const containingG = svg.append("g");
+
+
+
+        let drag_handler = d3.drag()
+            .on("start", dragStart)
+            .on("drag", dragDrag)
+            .on("end", dragEnd);
+
+        let zoomHandler = d3.zoom()
+            .on("zoom", zoom_actions);
+
+        drag_handler(containingG);
+
+        zoomHandler(svg);
+
+
         const simulation = d3.forceSimulation()
             .nodes(nodes);
 
@@ -66,7 +78,7 @@ const GivethDonators = ({donationData}) => {
             .force("center_force", d3.forceCenter(width / 2, height / 2))
             .force("links",linkForce);
 
-        let node = svg.append("g")
+        let node = containingG.append("g")
             .attr("class", "nodes")
             .selectAll("circle")
             .data(nodes)
@@ -75,7 +87,8 @@ const GivethDonators = ({donationData}) => {
             .attr("r", 10)
             .attr("fill", "red");
 
-        let nodeText = svg.append("g")
+
+        let nodeText = containingG.append("g")
             .selectAll("text")
             .data(nodes)
             .enter()
@@ -90,7 +103,7 @@ const GivethDonators = ({donationData}) => {
             .attr("fill", "black");
 
         //draw lines for the links
-        let link = svg.append("g")
+        let link = containingG.append("g")
             .attr("class", "links")
             .selectAll("line")
             .data(links)
@@ -103,7 +116,7 @@ const GivethDonators = ({donationData}) => {
             })
             .attr("fill", "blue");
 
-        let linkText = svg.append("g")
+        let linkText = containingG.append("g")
             .selectAll("text")
             .data(links)
             .enter()
@@ -142,8 +155,30 @@ const GivethDonators = ({donationData}) => {
             linkTextLabels
                 .attr("x", function(d) { return (d.source.x + d.target.x) / 2; })
                 .attr("y", function(d) { return (d.source.y + d.target.y) / 2 })
+
         }
 
+
+        const dragStart = (d) => {
+            if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+        };
+
+        const dragDrag = (d) => {
+            d.fx = d3.event.x;
+            d.fy = d3.event.y;
+        }
+
+        const dragEnd = (d) => {
+            if (!d3.event.active) simulation.alphaTarget(0);
+            d.fx = null;
+            d.fy = null;
+        }
+
+        function zoom_actions(){
+            containingG.attr("transform", d3.event.transform)
+        }
 
 
 
