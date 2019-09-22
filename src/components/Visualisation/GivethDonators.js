@@ -20,13 +20,30 @@ const GivethDonators = ({donationData}) => {
         let runningTotal = 0
         donationData.map(donation => {
             if (!includedGiverIds.includes(donation.giverId)) {
-                nodes.push({"id": donation.giverId})
+                nodes.push({"id": donation.giverId, isGiver: true, amount: donation.amount / 10**18})
                 includedGiverIds.push(donation.giverId)
             }
+            else {
+                nodes.forEach(node => {
+                    if (node.id === donation.giverId) {
+                        node.amount += donation.amount / 10**18
+                        if (node.id == "1655") {
+                            console.log("1655 amount", node.amount)
+                        }
+                    }
+                })
+            }
             if (!includedGiverIds.includes(donation.receiverId)) {
-                nodes.push({"id": donation.receiverId})
+                nodes.push({"id": donation.receiverId, isGiver: false, amount: donation.amount / 10**18})
                 includedGiverIds.push(donation.receiverId)
 
+            }
+            else {
+                nodes.forEach(node => {
+                    if (node.id === donation.receiverId) {
+                        node.amount += donation.amount / 10**18
+                    }
+                })
             }
             links.push({"source": donation.giverId, "target": donation.receiverId, "amount": donation.amount})
             runningTotal += donation.amount / 10**18;
@@ -94,8 +111,16 @@ const GivethDonators = ({donationData}) => {
             .data(nodes)
             .enter()
             .append("circle")
-            .attr("r", nodeRadius)
-            .attr("fill", "red");
+            .attr("r", (d) => {
+                // console.log(donationTotal)
+                // console.log(d.amount / 10**18 )
+                let proportion = d.amount / donationTotal;
+                // if (proportion > 1) console.log("ERROR")
+                console.log("Proportion", d.amount,proportion, d.id, "Total", 20+(0*proportion * 100));
+                return 20+(100*proportion);
+            })
+            .attr("fill", (d) => d.isGiver ? "green" : "red");
+
 
 
         let nodeText = containingG.append("g")
@@ -118,8 +143,8 @@ const GivethDonators = ({donationData}) => {
             .enter().append("svg:marker")    // This section adds in the arrows
             .attr("id", String)
             .attr("viewBox", "0 -5 10 10")
-            .attr("refX", 0)
-            .attr("refY", 0)
+            .attr("refX", -5)
+            .attr("refY", 1.5)
             .attr("markerWidth", 50)
             .attr("markerHeight", 5)
             .attr("orient", "auto")
@@ -135,7 +160,6 @@ const GivethDonators = ({donationData}) => {
             .enter().append("line")
             .attr("stroke-width", function(d) {
                 const strokeWidth =  d.amount / 10**18 /donationTotal * 100
-                console.log(strokeWidth);
 
                 return strokeWidth > 2 ? strokeWidth : 2
             })
