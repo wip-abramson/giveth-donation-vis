@@ -1,5 +1,6 @@
 ## This is a clone of the [eth-denver](https://github.com/graphprotocol/ethdenver-dapp) stater dapp for the graph meant to be used with the [Giveth donation subgraph](https://thegraph.com/explorer/subgraph/geleeroyale/giveth-donation)
 
+An entry for a hackathon by TheGraph
 
 ## Getting started
 
