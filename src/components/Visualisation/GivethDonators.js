@@ -103,13 +103,12 @@ const GivethDonators = ({ donationData }) => {
 
     let chargeForce = d3
       .forceManyBody()
-      .strength(-100)
+      .strength(-200)
       .distanceMax(400);
 
-    let collisionForce = d3.forceCollide(nodeRadius + 10);
+    let collisionForce = d3.forceCollide(50);
 
     simulation
-      .force('charge_force', d3.forceManyBody())
       .force('center_force', d3.forceCenter(width / 2, height / 2))
       .force('links', linkForce)
       .force('collision', collisionForce)
