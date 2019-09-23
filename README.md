@@ -2,6 +2,9 @@
 
 An entry for a hackathon by TheGraph
 
+Deployed via netlify:
+https://giveth-donations-dashboard.netlify.com/
+
 ## Getting started
 
 All you need to do is connect it with the donation subgraph
