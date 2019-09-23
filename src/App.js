@@ -9,14 +9,13 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Button,
+  Button
 } from '@material-ui/core'
 import './App.css'
 import Header from './components/Header'
 import Error from './components/Error'
-import Gravatars from './components/Gravatars'
 import Filter from './components/Filter'
-import GivethDonators from "./components/Visualisation/GivethDonators";
+import GivethDonators from './components/Visualisation/GivethDonators'
 
 if (!process.env.REACT_APP_GRAPHQL_ENDPOINT) {
   throw new Error('REACT_APP_GRAPHQL_ENDPOINT environment variable not defined')
@@ -24,18 +23,18 @@ if (!process.env.REACT_APP_GRAPHQL_ENDPOINT) {
 
 const client = new ApolloClient({
   uri: process.env.REACT_APP_GRAPHQL_ENDPOINT,
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache()
 })
 
 const GRAVATARS_QUERY = gql`
-  query givethdonations{
-      donates {
-        id
-        giverId
-        receiverId
-        token
-        amount
-      }
+  query givethdonations {
+    donates {
+      id
+      giverId
+      receiverId
+      token
+      amount
+    }
   }
 `
 
@@ -46,16 +45,19 @@ class App extends Component {
       withImage: false,
       withName: false,
       orderBy: 'displayName',
-      showHelpDialog: false,
+      showHelpDialog: false
     }
   }
 
   toggleHelpDialog = () => {
-    this.setState(state => ({ ...state, showHelpDialog: !state.showHelpDialog }))
+    this.setState(state => ({
+      ...state,
+      showHelpDialog: !state.showHelpDialog
+    }))
   }
 
   gotoQuickStartGuide = () => {
-    window.location.href = 'https://thegraph.com/docs/quick-start'
+    window.location.href = 'https://beta.giveth.io'
   }
 
   render() {
@@ -70,12 +72,20 @@ class App extends Component {
               orderBy={orderBy}
               withImage={withImage}
               withName={withName}
-              onOrderBy={field => this.setState(state => ({ ...state, orderBy: field }))}
+              onOrderBy={field =>
+                this.setState(state => ({ ...state, orderBy: field }))
+              }
               onToggleWithImage={() =>
-                this.setState(state => ({ ...state, withImage: !state.withImage }))
+                this.setState(state => ({
+                  ...state,
+                  withImage: !state.withImage
+                }))
               }
               onToggleWithName={() =>
-                this.setState(state => ({ ...state, withName: !state.withName }))
+                this.setState(state => ({
+                  ...state,
+                  withName: !state.withName
+                }))
               }
             />
             <Grid item>
@@ -92,15 +102,16 @@ class App extends Component {
                 >
                   {({ data, error, loading }) => {
                     return loading ? (
-                      <LinearProgress variant="query" style={{ width: '100%' }} />
+                      <LinearProgress
+                        variant="query"
+                        style={{ width: '100%' }}
+                      />
                     ) : error ? (
                       <Error error={error} />
-                    ) :
-                      (
-                          <GivethDonators donationData={data.donates}/>
-                      )
-                  }
-                  }
+                    ) : (
+                      <GivethDonators donationData={data.donates} />
+                    )
+                  }}
                 </Query>
               </Grid>
             </Grid>
@@ -111,19 +122,25 @@ class App extends Component {
             onClose={this.toggleHelpDialog}
             aria-labelledby="help-dialog"
           >
-            <DialogTitle id="help-dialog">{'Show Quick Guide?'}</DialogTitle>
+            <DialogTitle id="help-dialog">{'About this App'}</DialogTitle>
             <DialogContent>
               <DialogContentText>
-                We have prepared a quick guide for you to get started with The Graph at
-                this hackathon. Shall we take you there now?
+                This App shows donations made through https://beta.giveth.io
+                using The Graph to get the data from the Ethereum blockchain. Do
+                you want to visit Giveth and see the future of giving yourself?
+                =)
               </DialogContentText>
             </DialogContent>
             <DialogActions>
               <Button onClick={this.toggleHelpDialog} color="primary">
                 Nah, I'm good
               </Button>
-              <Button onClick={this.gotoQuickStartGuide} color="primary" autoFocus>
-                Yes, pease
+              <Button
+                onClick={this.gotoQuickStartGuide}
+                color="primary"
+                autoFocus
+              >
+                Yes, please
               </Button>
             </DialogActions>
           </Dialog>
