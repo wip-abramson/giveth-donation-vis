@@ -1,10 +1,8 @@
 import React from 'react';
 import * as d3 from 'd3';
 
-const GivethDonators = ({ donationData, donationCreateGiverData }) => {
-  // const [giverNodes, setGiverNodes] = React.useState([]);
-  // const [donationLinks, setDonationLinks] = React.useState([]);
-  // const [donationTotal, setDonationTotal] = React.useState(0);
+const GivethDonators = ({ donationData }) => {
+
 
   React.useEffect(() => {
     console.log('Mounted');

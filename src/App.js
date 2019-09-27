@@ -35,13 +35,6 @@ const DONATION_QUERY = gql`
       token
       amount
     }
-      donateAndCreateGivers(first: 1) {
-        id
-        giver
-        receiverId
-        token
-        amount
-    }
   }
 `
 
@@ -116,7 +109,7 @@ class App extends Component {
                     ) : error ? (
                       <Error error={error} />
                     ) : (
-                      <GivethDonators donationData={data.donates} donationCreateGiverData={data.donateAndCreateGivers} />
+                      <GivethDonators donationData={data.donates}  />
                     )
                   }}
                 </Query>
